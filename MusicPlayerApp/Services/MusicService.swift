@@ -14,7 +14,7 @@ protocol MusicService {
 final class MusicServiceAPI: MusicService {
     func fetchMusicList(param: String) async throws -> MusicResponse {
         let url = URL(string: "https://itunes.apple.com/search?term={\(param)}")!
-        let (data, urlResponse) = try await URLSession.shared.data(from: url)
+        let (data, _) = try await URLSession.shared.data(from: url)
         return try JSONDecoder().decode(MusicResponse.self, from: data)
     }
 }

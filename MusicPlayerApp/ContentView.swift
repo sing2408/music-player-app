@@ -48,6 +48,9 @@ struct ContentView: View {
                 
             }
         }
+        .alert("Error Fetching", isPresented: $vm.isError) {
+            Button("OK", role: .cancel) { }
+        }
         .padding()
         .task {
             await vm.fetchMusicList(param: searchText)

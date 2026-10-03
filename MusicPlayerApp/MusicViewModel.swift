@@ -8,12 +8,14 @@
 import SwiftUI
 import Combine
 
+@MainActor
 final class MusicViewModel: ObservableObject {
     private let service: MusicService
     private let soundManager: SoundManagerProtocol
     
     @Published var musicList: MusicResponse?
     @Published var musicQueue: [Music] = []
+    @Published var isError: Bool = false
     private var index: Int = 0
     
     init(
@@ -24,12 +26,11 @@ final class MusicViewModel: ObservableObject {
         self.soundManager = soundManager
     }
     
-    @MainActor
     func fetchMusicList(param: String) async {
         do {
             musicList = try await self.service.fetchMusicList(param: param)
         } catch {
-            //handle error
+            isError = true
         }
     }
     
@@ -40,15 +41,12 @@ final class MusicViewModel: ObservableObject {
     func backMusic() {
         if index == 0 { return }
         index -= 1
-        print(index)
         soundManager.playSound(url: musicQueue[index].previewUrl ?? "")
     }
     
     func nextMusic() {
-        print(musicQueue)
         if index == musicQueue.count - 1 { return }
         index += 1
-        print(index)
         soundManager.playSound(url: musicQueue[index].previewUrl ?? "")
     }
     
